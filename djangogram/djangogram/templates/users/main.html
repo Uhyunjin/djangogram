@@ -1,8 +1,17 @@
-Here is main.html.
+{% extends 'users/base.html' %}
+<h1>Here is main.html. </h1>
 
+{% block title %}
+Log in
+{% endblock title %}
+
+{% block content %}
 <form action="{% url 'users:main' %}" method='post'>
     {% csrf_token %}
     <input type='input' name='username' placeholder='username'>
     <input type='password' name='password' placeholder='password'> 
     <input type='submit' value='login'>
 </form>
+<a href="{% url 'users:signup' %}">sign up</a>
+
+{% endblock content %}
