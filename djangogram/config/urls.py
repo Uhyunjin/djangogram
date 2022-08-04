@@ -19,7 +19,7 @@ urlpatterns = [
     #  /
     path("", include("djangogram.users.urls", namespace="users")),
     # /posts/
-    path("post/", include("djangogram.posts.urls", namespace="posts")), 
+    path("posts/", include("djangogram.posts.urls", namespace="posts")), 
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
