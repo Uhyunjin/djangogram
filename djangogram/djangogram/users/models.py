@@ -22,7 +22,7 @@ class User(AbstractUser):
     phone_number = CharField(blank=True, max_length=255)
     gender =  CharField(blank=True, choices=GENDER_CHOICES, max_length=255)
     followers = models.ManyToManyField("self")
-    folloing = models.ManyToManyField("self")
+    following = models.ManyToManyField("self")
     
 
     def get_absolute_url(self):
