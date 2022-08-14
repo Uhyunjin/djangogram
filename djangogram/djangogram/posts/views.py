@@ -1,7 +1,8 @@
+from webbrowser import get
 from django.shortcuts import get_object_or_404, render, redirect
 from djangogram.users.models import User as user_model
 from . import models, serializers
-from .forms import CreatePostForm, CommentForm
+from .forms import CreatePostForm, CommentForm, UpdatePostForm
 from django.db.models import Q
 from django.urls import reverse
 
@@ -81,3 +82,29 @@ def comment_delete(request, comment_id):
     
     else:
         return render(request, 'users/main.html')
+
+def post_update(request, post_id):
+    if request.user.is_authenticated:
+
+        post = get_object_or_404(models.Post, pk=post_id)
+        if request.user != post.author:
+            return redirect(reverse('posts:index'))
+        
+        if request.method == 'GET':
+            form = UpdatePostForm(instance=post)
+            return render(
+                request,
+                'posts/post_update.html',
+                {'form':form, 'post':post}
+            )
+        elif request.method == 'POST':
+
+            form == UpdatePostForm(request.POST)
+            if form.is_valid():
+                post.caption = form.cleaned_data['caption']
+                post.save()
+            
+            return redirect(reverse('posts:index'))
+
+    else:
+        return  render(request, 'users/main.html')
