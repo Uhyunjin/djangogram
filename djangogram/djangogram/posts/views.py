@@ -99,7 +99,8 @@ def post_update(request, post_id):
             )
         elif request.method == 'POST':
 
-            form == UpdatePostForm(request.POST)
+            form = UpdatePostForm(request.POST)
+
             if form.is_valid():
                 post.caption = form.cleaned_data['caption']
                 post.save()
