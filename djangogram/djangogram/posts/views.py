@@ -51,7 +51,7 @@ def post_create(request):
             else:
                 print(form.errors)
 
-            return render(request, 'posts/main.html')
+            return redirect(reverse('posts:index'))
         
         else:
             return render(request, 'users/main.html')
@@ -71,3 +71,13 @@ def comment_create(request, post_id):
 
         else:
             return render(request, 'users/main.html')
+
+def comment_delete(request, comment_id):
+    if request.user.is_authenticated:
+        comment = get_object_or_404(models.Comment, pk=comment_id)
+        if request.user == comment.author:
+            comment.delete()
+        return redirect(reverse('posts:index'))
+    
+    else:
+        return render(request, 'users/main.html')
