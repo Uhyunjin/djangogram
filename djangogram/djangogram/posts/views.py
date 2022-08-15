@@ -5,6 +5,7 @@ from . import models, serializers
 from .forms import CreatePostForm, CommentForm, UpdatePostForm
 from django.db.models import Q
 from django.urls import reverse
+from django.http import JsonResponse
 
 def index(request):
     if request.method == 'GET':
@@ -120,3 +121,24 @@ def post_update(request, post_id):
 
     else:
         return  render(request, 'users/main.html')
+    
+def post_like(request, post_id):
+    response_body = {"result" : ""}
+
+    if request.user.is_authenticated:
+        if request.method == "POST":
+
+            post = get_object_or_404(models.Post, pk=post_id)
+            existed_user = post.image_likes.filter(pk=request.user.id)
+            if existed_user:
+                # 좋아요 누른 상태일 때 좋아요 취소
+                post.image_likes.remove(request.user)
+                response_body["result"] = "dislike"
+            else:
+                # 좋아요가 아닐 때 좋아요
+                post.image_likes.add(request.user)
+                response_body["result"] = "like"
+
+            return JsonResponse(status=200, data=response_body)
+    else:
+        return JsonResponse(status=403, data=response_body)
