@@ -18,15 +18,29 @@ const handleLikeClick = (buttonId) => {
     console.log(buttonId);
 
     const likeButton = document.getElementById(buttonId);
-    console.log(likeButton);
-
     const likeIcon = likeButton.querySelector("i");
-    console.log(likeIcon);
-    likeIcon.classList.replace("fa-heart-o", "fa-heart")
 
     const csrftoken = getCookie('csrftoken');
-    console.log(csrftoken)
+    // like-button-{{ post.id }}
+    const postId = buttonId.split("-").pop();
+    const url = "/posts/" + postId + "/post_like";
 
     //서버로 좋아요 api호출
-    //결과를 받고 html(좋아요 하트) 모습을 변경
+    fetch(url, {
+        method: "POST",
+        mode: "same-origin",
+        headers: {
+            'X-CSRFToken': csrftoken
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.result === "like"){
+            likeIcon.classList.replace("fa-heart-o", "fa-heart");
+        } else{
+            likeIcon.classList.replace("fa-heart", "fa-heart-o");
+        }
+
+    });
+
 }
