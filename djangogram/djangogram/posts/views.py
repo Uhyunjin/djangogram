@@ -83,6 +83,17 @@ def comment_delete(request, comment_id):
     else:
         return render(request, 'users/main.html')
 
+def post_delete(request, post_id):
+    if request.user.is_authenticated:
+        post = get_object_or_404(models.Post, pk=post_id)
+        if request.user == post.author:
+            post.delete()
+        return redirect(reverse('posts:index'))
+    
+    else:
+        return render(request, 'users/main.html')
+
+
 def post_update(request, post_id):
     if request.user.is_authenticated:
 
