@@ -134,11 +134,13 @@ def post_like(request, post_id):
                 # 좋아요 누른 상태일 때 좋아요 취소
                 post.image_likes.remove(request.user)
                 response_body["result"] = "dislike"
+
             else:
                 # 좋아요가 아닐 때 좋아요
                 post.image_likes.add(request.user)
                 response_body["result"] = "like"
 
+            post.save()
             return JsonResponse(status=200, data=response_body)
     else:
         return JsonResponse(status=403, data=response_body)
